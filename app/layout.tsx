@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Header } from "./components/Header";
+import { cn } from "./lib/utils";
 
 // const inter = Inter({ subsets: ['latin'] })
 const myFont = localFont({ src: "../public/font/conthrax-sb.otf" });
@@ -18,7 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={myFont.className}>
+      <body
+        className={cn(myFont.className, "flex flex-col items-center black")}
+      >
         <main>
           <div className="flex flex-col justify-between min-h-screen relative w-full max-w-7xl px-4 mx-auto">
             <Header />
