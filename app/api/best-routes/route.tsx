@@ -1,7 +1,7 @@
 function calculateBestRoutes(from:any, to:any){
   let chains = [
     {
-      name: "Optimism",
+      name: "Optimism Goerli",
       rpc: "",
       routerAddr: "0xEB52E9Ae4A9Fb37172978642d4C141ef53876f26",
       chainId: "",
@@ -9,7 +9,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: ""
     },
     {
-      name: "Avalanche",
+      name: "Fuji Testnet",
       rpc: "",
       routerAddr: "0x554472a2720E5E7D5D3C817529aBA05EEd5F82D8",
       chainId: "",
@@ -17,7 +17,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
-      name: "Ethereum",
+      name: "Sepolia Testnet",
       rpc: "",
       routerAddr: "0xD0daae2231E9CB96b94C8512223533293C3693Bf",
       chainId: "",
@@ -25,7 +25,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
-      name: "Polygon",
+      name: "Mumbai Testnet",
       rpc: "",
       routerAddr: "0x70499c328e1E2a3c41108bd3730F6670a44595D1",
       chainSelector: "12532609583862916517",
@@ -33,7 +33,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
-      name: "Arbitrum",
+      name: "Arbitrum Testnet",
       rpc: "",
       routerAddr: "0x88E492127709447A5ABEFdaB8788a15B4567589E",
       chainSelector: "6101244977088475029",
@@ -41,7 +41,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
-      name: "Base",
+      name: "Base Testnet",
       rpc: "",
       routerAddr: "0xa8c0c11bf64af62cdca6f93d3769b88bdd7cb93d",
       chainSelector: "5790810961207155433",
@@ -49,7 +49,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
-      name: "BSC",
+      name: "BSC Testnet",
       rpc: "",
       routerAddr: "0x9527e2d01a3064ef6b50c1da1c0cc523803bcff2",
       chainId: "13264668187771770619",
