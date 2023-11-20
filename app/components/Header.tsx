@@ -12,8 +12,8 @@ const ConnectButton = dynamic(() => import("./ConnectButton"), {
 
 export function Header() {
   return (
-    <div className="container mx-auto py-5 sm:py-10">
-      <div className="flex items-center justify-between gap-x-5">
+    <div className="flex w-full items-center justify-between my-4">
+      <div className="flex items-center">
         <Link href="/" passHref>
           <Image
             src="/logo/Crosslink Horizontal.svg"
@@ -22,8 +22,11 @@ export function Header() {
             height={200}
           />
         </Link>
-        <ConnectButton />
+        <Link href="/marketplace">
+          <span className="text-base ml-4">Marketplace</span>
+        </Link>
       </div>
+      <ConnectButton />
     </div>
   );
 }
