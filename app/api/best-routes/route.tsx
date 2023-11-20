@@ -1,7 +1,8 @@
 function calculateBestRoutes(from:any, to:any){
   let chains = [
     {
-      name: "Optimism Goerli",
+      slug: "op-testnet",
+      name: "Optimism Testnet",
       rpc: "",
       routerAddr: "0xEB52E9Ae4A9Fb37172978642d4C141ef53876f26",
       chainId: "",
@@ -9,6 +10,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: ""
     },
     {
+      slug: "fuji-testnet",
       name: "Fuji Testnet",
       rpc: "",
       routerAddr: "0x554472a2720E5E7D5D3C817529aBA05EEd5F82D8",
@@ -17,6 +19,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
+      slug: "sepolia-testnet",
       name: "Sepolia Testnet",
       rpc: "",
       routerAddr: "0xD0daae2231E9CB96b94C8512223533293C3693Bf",
@@ -25,7 +28,8 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
-      name: "Mumbai Testnet",
+      slug: "polygon-testnet",
+      name: "Polygon Testnet",
       rpc: "",
       routerAddr: "0x70499c328e1E2a3c41108bd3730F6670a44595D1",
       chainSelector: "12532609583862916517",
@@ -33,6 +37,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
+      slug: "arbitrum-testnet",
       name: "Arbitrum Testnet",
       rpc: "",
       routerAddr: "0x88E492127709447A5ABEFdaB8788a15B4567589E",
@@ -41,6 +46,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
+      slug: "base-testnet",
       name: "Base Testnet",
       rpc: "",
       routerAddr: "0xa8c0c11bf64af62cdca6f93d3769b88bdd7cb93d",
@@ -49,6 +55,7 @@ function calculateBestRoutes(from:any, to:any){
       logo: "",
     },
     {
+      slug: "bsc-testnet",
       name: "BSC Testnet",
       rpc: "",
       routerAddr: "0x9527e2d01a3064ef6b50c1da1c0cc523803bcff2",
@@ -60,19 +67,19 @@ function calculateBestRoutes(from:any, to:any){
   const OP = 0, AVALANCHE=1, ETHEREUM=2, POLYGON=3, ARBITRUM = 4, BASE=5, BSC=6;
   const SUPPORTED_CHAINS = 7;
   const INF = 100000;
-  let FROM = 0;
-  let TO = 0;
+  let FROM = -1;
+  let TO = -1;
   
 
   let parent = new Array(SUPPORTED_CHAINS);
   let dist = new Array(SUPPORTED_CHAINS);
   let edges = new Array(SUPPORTED_CHAINS);
   
-  for(let i=0;i<chains.length;i++){
-    if (chains[i].name.toLowerCase() == from ){
+  for(let i=0;i<chains.length;i++){ //init the graph
+    if (chains[i].slug === from ){
       FROM = i;
     }
-    if (chains[i].name.toLowerCase() == to ){
+    if (chains[i].slug === to ){
       TO = i;
     }
 
@@ -85,6 +92,11 @@ function calculateBestRoutes(from:any, to:any){
       }
     }
   }
+
+  if (FROM==-1 || TO==-1){
+    throw new Error("Can't find the source and destination. Please check your source and destination variable to match our slug(polygon-testnet, op-testnet)")
+  }
+
   edges[OP][AVALANCHE] = 2
   edges[AVALANCHE][POLYGON] = 1
   edges[OP][ETHEREUM] = 1
@@ -125,9 +137,14 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const from = searchParams.get('from')
   const to = searchParams.get('to')
-  // console.log("from to ", from, to)
-  let data = calculateBestRoutes(from?.toLowerCase(), to?.toLowerCase());
-  return Response.json({
-    data
-  })
+  try{
+    let data = await calculateBestRoutes(from?.toLowerCase(), to?.toLowerCase());
+    return Response.json({
+      data
+    })
+  }catch(error){
+    return Response.json({
+      error: error
+    })
+  }
 }
