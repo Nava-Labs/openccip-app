@@ -92,7 +92,6 @@ function calculateBestRoutes(from:any, to:any){
       }
     }
   }
-  console.log("from to ", FROM, TO)
   if (FROM==-1 || TO==-1){
     throw new Error("Can't find the source and destination. Please check your source and destination variable to match our slug(polygon-testnet, op-testnet)")
   }
@@ -129,33 +128,23 @@ function calculateBestRoutes(from:any, to:any){
       }
     }
     if (idx==-1) break
-    console.log("idx ", idx)
     added[idx] = true;
 
     for(let j=0;j<chains.length;j++){
       if (shortestDist + edges[idx][j] < dist[j] && edges[i][j]!=INF){
         dist[j] = shortestDist + edges[idx][j];
         parent[j] = idx; //keep the parent
-        console.log("i j ", i,j)
       }
     }
   }
 
   if (dist[TO] ==INF ){
-    console.log("yoyo")
     throw new Error("no path found")
   }
-
-  console.log("???")
   let now = TO;
   let paths = new Array();
-  console.log("polygon avalanche ", edges[POLYGON][AVALANCHE], POLYGON, AVALANCHE, BASE)
-  console.log("Avalanche Base ", edges[AVALANCHE][BASE])
-
-  console.log("parent ", parent, now, FROM)
 
   while(parent[now]!=-1){
-    // console.log(" now ", now, "parent now ", parent[now])
     paths.push(now)
     now = parent[now];
   }
