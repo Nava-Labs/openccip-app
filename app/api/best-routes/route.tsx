@@ -115,7 +115,7 @@ function calculateBestRoutes(from:any, to:any){
   parent[FROM] = -1; //from has no parent
 
   if (edges[FROM][TO]!=INF){ //direct path always chosen
-    return getDataChains(chains, [FROM, TO]);
+    return getDataChains(chains, [TO, FROM]);
   }
 
   for(let i=0;i<chains.length;i++){
