@@ -1,5 +1,5 @@
 function calculateBestRoutes(from:any, to:any){
-  let chains = [
+  const chains = [
     {
       slug: "op-testnet",
       name: "Optimism Testnet",
@@ -65,12 +65,12 @@ function calculateBestRoutes(from:any, to:any){
   ]
 
   const OP = 0, AVALANCHE=1, ETHEREUM=2, POLYGON=3, ARBITRUM = 4, BASE=5, BSC=6;
-  const SUPPORTED_CHAINS = 7;
+  const SUPPORTED_CHAINS = chains.length;
   const INF = 100000;
   let FROM = -1;
   let TO = -1;
   
-
+  let added = new Array(SUPPORTED_CHAINS);
   let parent = new Array(SUPPORTED_CHAINS);
   let dist = new Array(SUPPORTED_CHAINS);
   let edges = new Array(SUPPORTED_CHAINS);
@@ -82,7 +82,7 @@ function calculateBestRoutes(from:any, to:any){
     if (chains[i].slug === to ){
       TO = i;
     }
-
+    added[i] = false;
     edges[i] = new Array(SUPPORTED_CHAINS);
     for(let j=0;j<SUPPORTED_CHAINS;j++){
       dist[i] = INF;
@@ -92,44 +92,86 @@ function calculateBestRoutes(from:any, to:any){
       }
     }
   }
-
+  console.log("from to ", FROM, TO)
   if (FROM==-1 || TO==-1){
     throw new Error("Can't find the source and destination. Please check your source and destination variable to match our slug(polygon-testnet, op-testnet)")
   }
 
   edges[OP][AVALANCHE] = 2
+  
   edges[AVALANCHE][POLYGON] = 1
-  edges[OP][ETHEREUM] = 1
+  edges[POLYGON][AVALANCHE] = 1
+  
+  edges[OP][ETHEREUM] = 10
   edges[ETHEREUM][POLYGON] = 10
   edges[OP][POLYGON] = 5
+
+  edges[AVALANCHE][BASE] = 2
+  edges[BASE][AVALANCHE] = 2
   
+  edges[AVALANCHE][BSC] = 2
+  edges[BSC][AVALANCHE] = 2
+
   dist[FROM] = 0; //initial start, otherwise assign INF
-  
+  parent[FROM] = -1; //from has no parent
+
+  if (edges[FROM][TO]!=INF){ //direct path always chosen
+    return getDataChains(chains, [FROM, TO]);
+  }
+
   for(let i=0;i<chains.length;i++){
+    let shortestDist = INF; //get current shortest dist
+    let idx = -1;
     for(let j=0;j<chains.length;j++){
-      if (dist[i] + edges[i][j] < dist[j] && dist[i]!=INF){
-        dist[j] = dist[i] + edges[i][j];
-        parent[j] = i; //keep the parent
+      if ( !added[j] && dist[j] < shortestDist ){
+        idx = j;
+        shortestDist = dist[j];
+      }
+    }
+    if (idx==-1) break
+    console.log("idx ", idx)
+    added[idx] = true;
+
+    for(let j=0;j<chains.length;j++){
+      if (shortestDist + edges[idx][j] < dist[j] && edges[i][j]!=INF){
+        dist[j] = shortestDist + edges[idx][j];
+        parent[j] = idx; //keep the parent
+        console.log("i j ", i,j)
       }
     }
   }
 
+  if (dist[TO] ==INF ){
+    console.log("yoyo")
+    throw new Error("no path found")
+  }
+
+  console.log("???")
   let now = TO;
   let paths = new Array();
-  while(now!=FROM){
+  console.log("polygon avalanche ", edges[POLYGON][AVALANCHE], POLYGON, AVALANCHE, BASE)
+  console.log("Avalanche Base ", edges[AVALANCHE][BASE])
+
+  console.log("parent ", parent, now, FROM)
+
+  while(parent[now]!=-1){
+    // console.log(" now ", now, "parent now ", parent[now])
     paths.push(now)
     now = parent[now];
   }
   paths.push(now);
 
-  let data = new Array()
-  for(let i=paths.length-1; i>=0; i--){ //paths are stored in 
-    data.push(chains[paths[i]]);
-  }
-
-  return data;
+  return getDataChains(chains, paths);
 }
 
+function getDataChains(chains:any, paths:any){
+  let data = new Array()
+  for(let i=paths.length-1; i>=0; i--){ //paths are stored in 
+    // if (paths[i] == -1 )continue;
+    data.push(chains[paths[i]]);
+  }
+  return data;
+}
 
 
 export async function GET(request: Request) {
@@ -143,8 +185,10 @@ export async function GET(request: Request) {
       data
     })
   }catch(error){
+    const errorMessage = (error as Error).message || 'An error occurred';
+
     return Response.json({
-      error: error
+      error: errorMessage
     })
   }
 }
