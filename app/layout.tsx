@@ -20,12 +20,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={cn(myFont.className, "flex flex-col items-center black")}
-      >
+      <body className={cn(myFont.className, "flex flex-col black")}>
         <Providers>
-          <main>
-            <div className="flex flex-col justify-between min-h-screen relative w-full max-w-7xl px-4 mx-auto">
+          <main vaul-drawer-wrapper="">
+            <div className="flex flex-col justify-center min-h-screen relative w-full max-w-7xl px-4 mx-auto">
               <Header />
               {children}
             </div>
