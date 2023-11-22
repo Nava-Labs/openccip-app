@@ -214,12 +214,11 @@ function runMiddleware(
 // }
 
 export async function GET(
-  req: NextApiRequest,
-  // res: NextResponse
+  request: Request
   ) {
   // let res = NextResponse.next()
   // await runMiddleware(req, res, cors)
-  const { searchParams } = new URL(req.url! )
+  const { searchParams } = new URL(request.url )
   const from = searchParams.get('from')
   const to = searchParams.get('to')
   try{
@@ -231,7 +230,7 @@ export async function GET(
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      "Access-Control-Allow-Credentials":  "true" 
     },
     })
   }catch(error){
