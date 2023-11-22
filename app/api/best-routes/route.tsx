@@ -1,3 +1,14 @@
+import type { NextApiRequest, NextApiResponse } from 'next'
+import Cors from 'cors'
+import { NextResponse } from 'next/server';
+
+// Initializing the cors middleware
+// You can read more about the available options here: https://github.com/expressjs/cors#configuration-options
+const cors = Cors({
+  methods: ['GET'],
+})
+
+
 function calculateBestRoutes(from:any, to:any){
   const chains = [
     {
@@ -163,16 +174,65 @@ function getDataChains(chains:any, paths:any){
   return data;
 }
 
+function runMiddleware(
+  req: NextApiRequest,
+  res: NextResponse,
+  fn: Function
+) {
+  return new Promise((resolve, reject) => {
+    fn(req, res, (result: any) => {
+      if (result instanceof Error) {
+        return reject(result)
+      }
 
-export async function GET(request: Request) {
- 
-  const { searchParams } = new URL(request.url)
+      return resolve(result)
+    })
+  })
+}
+
+// export default async function handler(
+//   req: NextApiRequest,
+//   res: NextApiResponse
+// ) {
+//   console.log("a")
+//   await runMiddleware(req, res, cors)
+//   const { searchParams } = new URL(req.url! )
+//   const from = searchParams.get('from')
+//   const to = searchParams.get('to')
+//   try{
+//     let data = await calculateBestRoutes(from?.toLowerCase(), to?.toLowerCase());
+//     return Response.json({
+//       data
+//     })
+//   }catch(error){
+//     const errorMessage = (error as Error).message || 'An error occurred';
+
+//     return Response.json({
+//       error: errorMessage
+//     })
+//   }
+// }
+
+export async function GET(
+  req: NextApiRequest,
+  // res: NextResponse
+  ) {
+  // let res = NextResponse.next()
+  // await runMiddleware(req, res, cors)
+  const { searchParams } = new URL(req.url! )
   const from = searchParams.get('from')
   const to = searchParams.get('to')
   try{
     let data = await calculateBestRoutes(from?.toLowerCase(), to?.toLowerCase());
     return Response.json({
       data
+    },{
+      status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
     })
   }catch(error){
     const errorMessage = (error as Error).message || 'An error occurred';
