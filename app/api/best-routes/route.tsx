@@ -59,7 +59,8 @@ function calculateBestRoutes(from:any, to:any){
       name: "BSC Testnet",
       rpc: "",
       routerAddr: "0x9527e2d01a3064ef6b50c1da1c0cc523803bcff2",
-      chainId: "13264668187771770619",
+      chainSelector: "13264668187771770619",
+      chainId: "",
       logo: "",
     },
   ]
