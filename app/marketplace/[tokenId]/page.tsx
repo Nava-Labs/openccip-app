@@ -1,23 +1,28 @@
-"use client";
+export const dynamic = "force-dynamic";
 
-import Image from "next/image";
 import {
-  ArrowDownIcon,
-  ArrowUpIcon,
   ArrowsUpDownIcon,
   BanknotesIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+
 import {
   Table,
+  TableBody,
+  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/app/components/ui/table";
 import { BuyButton } from "@/app/components/BuyButton";
+import { Client, cacheExchange, fetchExchange } from "@urql/core";
+import { getNftDetailsQuery } from "@/lib/gql/queries/nft";
+import truncateEthAddress from "truncate-eth-address";
+
+const client = new Client({
+  url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crosslink-subgraph",
+  exchanges: [cacheExchange, fetchExchange],
+});
 
 type Params = {
   params: {
@@ -25,46 +30,48 @@ type Params = {
   };
 };
 
-export default function NftDetails({ params }: Params) {
-  const tokenAddress = "1";
-  const tokenId = "1";
-  const [showDetails, setShowDetails] = useState(false); // State to handle collapsible section
+export default async function NftDetails({ params }: Params) {
+  const tokenAddress = params.tokenId.split("-")[0];
+  const tokenId = params.tokenId.split("-")[1];
+  //   const [showDetails, setShowDetails] = useState(false); // State to handle collapsible section
 
-  // Function to toggle collapsible section
-  const toggleDetails = () => {
-    setShowDetails(!showDetails);
-  };
+  //   // Function to toggle collapsible section
+  //   const toggleDetails = () => {
+  //     setShowDetails(!showDetails);
+  //   };
+
+  const nftDetailsRes = await client
+    .query(getNftDetailsQuery, {
+      id: params.tokenId,
+    })
+    .toPromise();
+  if (!nftDetailsRes) throw new Error("Failed to fetch NFT details");
+
+  const nftDetails = nftDetailsRes.data?.listedNFT!;
+  const baseUriWithId = nftDetails.uri;
+
+  const response = await fetch(baseUriWithId);
+  const data = await response.json();
+  let imageUrl = data.image;
 
   return (
     <div className="flex gap-x-8 h-full w-full">
       <div className="flex flex-col">
         <div className="w-full">
           <div className="flex h-full w-full items-center justify-center">
-            {/* <img
-              src={imageUrl}
-              className="min-h-[500px] max-h-[500px] min-w-[500px] max-w-[500px]"
-            /> */}
-            <Image
-              src="/133-silver.webp"
-              alt="Xxx"
-              width={900}
-              height={500}
-              className="items-center"
-            />
+            <img src={imageUrl} className="w-full h-full" />
           </div>
         </div>
       </div>
 
       <div className="flex flex-col py-5 w-full space-y-8">
         <div>
-          {/* <div className="text-2xl">
+          <div className="text-2xl">
             {nftDetails.collectionName} #{params.tokenId.split("-")[1]}
-          </div> */}
-          <div className="text-2xl ml-8">Anjay #1</div>
-          {/* <div>Owned by {truncateEthAddress(nftDetails.owner)}</div> */}
-          <div className="flex space-x-3">
+          </div>
+          <div className="flex flex-row space-x-3 ">
             <UserIcon className="h-5 " />
-            <div>Owned by 0x...1</div>
+            <div>Owned by {truncateEthAddress(nftDetails.owner)}</div>
           </div>
         </div>
 
@@ -80,8 +87,7 @@ export default function NftDetails({ params }: Params) {
               className="h-8"
             />
             <span className="text-lg">
-              {/* {nftDetails.price === "0" ? "0" : Number(nftDetails.price) / 1e18} */}
-              10000
+              {nftDetails.price === "0" ? "0" : Number(nftDetails.price) / 1e18}
             </span>
           </div>
 
@@ -108,11 +114,11 @@ export default function NftDetails({ params }: Params) {
                   <TableHead>Date</TableHead>
                 </TableRow>
               </TableHeader>
-              {/* {nftDetails.activity.map((item: any, index: number) => (
+              {nftDetails.activity.map((item: any, index: number) => (
                 <TableBody key={index}>
                   <TableCell>{item.type}</TableCell>
                   <TableCell>
-                    {Number(BigInt(item.price) / BigInt(1e18))} APE
+                    {Number(BigInt(item.price) / BigInt(1e18))}
                   </TableCell>
                   <TableCell>{truncateEthAddress(item.from)}</TableCell>
                   <TableCell>{truncateEthAddress(item.to)}</TableCell>
@@ -120,12 +126,12 @@ export default function NftDetails({ params }: Params) {
                     {new Date(item.timestamp * 1000).toLocaleDateString()}
                   </TableCell>
                 </TableBody>
-              ))} */}
+              ))}
             </Table>
           </div>
         </div>
 
-        <div className="flex flex-col w-full space-y-8">
+        {/* <div className="flex flex-col w-full space-y-8">
           <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
             <div
               className="flex items-center space-x-2 p-2 border-b cursor-pointer"
@@ -161,7 +167,7 @@ export default function NftDetails({ params }: Params) {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

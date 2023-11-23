@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 type ImageProps = {
@@ -5,7 +7,7 @@ type ImageProps = {
 };
 
 const Image: React.FC<ImageProps> = async ({ uri }) => {
-  const response = await fetch("https://ipfs.io/ipfs/" + uri.split("//")[1]);
+  const response = await fetch(uri);
   const data = await response.json();
   let imageUrl = data.image;
 
