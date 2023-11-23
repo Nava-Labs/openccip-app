@@ -4,11 +4,12 @@ export const getNftsQuery = graphql(`
   query GetNftsQuery {
     listedNFTs {
       id
-      collectionAddress
-      owner
-      uri
       collectionName
+      collectionAddress
+      uri
       price
+      owner
+      chainOrigin
     }
   }
 `);

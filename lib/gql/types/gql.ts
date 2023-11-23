@@ -13,7 +13,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query GetNftsQuery {\n    listedNFTs {\n      id\n      collectionAddress\n      owner\n      uri\n      collectionName\n      price\n    }\n  }\n": types.GetNftsQueryDocument,
+    "\n  query GetNftsQuery {\n    listedNFTs {\n      id\n      collectionName\n      collectionAddress\n      uri\n      price\n      owner\n      chainOrigin\n    }\n  }\n": types.GetNftsQueryDocument,
     "\n  query GetNftDetailsQuery($id: ID!) {\n    listedNFT(id: $id) {\n      activity {\n        from\n        price\n        timestamp\n        to\n        type\n      }\n      collectionName\n      owner\n      price\n      uri\n    }\n  }\n": types.GetNftDetailsQueryDocument,
 };
 
@@ -34,7 +34,7 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetNftsQuery {\n    listedNFTs {\n      id\n      collectionAddress\n      owner\n      uri\n      collectionName\n      price\n    }\n  }\n"): (typeof documents)["\n  query GetNftsQuery {\n    listedNFTs {\n      id\n      collectionAddress\n      owner\n      uri\n      collectionName\n      price\n    }\n  }\n"];
+export function graphql(source: "\n  query GetNftsQuery {\n    listedNFTs {\n      id\n      collectionName\n      collectionAddress\n      uri\n      price\n      owner\n      chainOrigin\n    }\n  }\n"): (typeof documents)["\n  query GetNftsQuery {\n    listedNFTs {\n      id\n      collectionName\n      collectionAddress\n      uri\n      price\n      owner\n      chainOrigin\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
