@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query GetNftsQuery {\n    listedNFTs {\n      id\n      collectionName\n      collectionAddress\n      uri\n      price\n      owner\n      chainOrigin\n    }\n  }\n": types.GetNftsQueryDocument,
-    "\n  query GetNftDetailsQuery($id: ID!) {\n    listedNFT(id: $id) {\n      activity {\n        from\n        price\n        timestamp\n        to\n        type\n      }\n      collectionName\n      owner\n      price\n      uri\n    }\n  }\n": types.GetNftDetailsQueryDocument,
+    "\n  query GetNftDetailsQuery($id: ID!) {\n    listedNFT(id: $id) {\n      activity {\n        from\n        activityOrigin\n        id\n        timestamp\n        price\n        to\n        type\n      }\n      collectionAddress\n      collectionName\n      id\n      uri\n      chainOrigin\n      owner\n      price\n    }\n  }\n": types.GetNftDetailsQueryDocument,
 };
 
 /**
@@ -38,7 +38,7 @@ export function graphql(source: "\n  query GetNftsQuery {\n    listedNFTs {\n   
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query GetNftDetailsQuery($id: ID!) {\n    listedNFT(id: $id) {\n      activity {\n        from\n        price\n        timestamp\n        to\n        type\n      }\n      collectionName\n      owner\n      price\n      uri\n    }\n  }\n"): (typeof documents)["\n  query GetNftDetailsQuery($id: ID!) {\n    listedNFT(id: $id) {\n      activity {\n        from\n        price\n        timestamp\n        to\n        type\n      }\n      collectionName\n      owner\n      price\n      uri\n    }\n  }\n"];
+export function graphql(source: "\n  query GetNftDetailsQuery($id: ID!) {\n    listedNFT(id: $id) {\n      activity {\n        from\n        activityOrigin\n        id\n        timestamp\n        price\n        to\n        type\n      }\n      collectionAddress\n      collectionName\n      id\n      uri\n      chainOrigin\n      owner\n      price\n    }\n  }\n"): (typeof documents)["\n  query GetNftDetailsQuery($id: ID!) {\n    listedNFT(id: $id) {\n      activity {\n        from\n        activityOrigin\n        id\n        timestamp\n        price\n        to\n        type\n      }\n      collectionAddress\n      collectionName\n      id\n      uri\n      chainOrigin\n      owner\n      price\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

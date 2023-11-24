@@ -19,15 +19,20 @@ export const getNftDetailsQuery = graphql(`
     listedNFT(id: $id) {
       activity {
         from
-        price
+        activityOrigin
+        id
         timestamp
+        price
         to
         type
       }
+      collectionAddress
       collectionName
+      id
+      uri
+      chainOrigin
       owner
       price
-      uri
     }
   }
 `);
