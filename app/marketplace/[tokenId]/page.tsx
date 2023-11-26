@@ -1,11 +1,9 @@
-export const dynamic = "force-dynamic";
-
 import {
   ArrowsUpDownIcon,
   BanknotesIcon,
+  InformationCircleIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-
 import {
   Table,
   TableBody,
@@ -18,6 +16,8 @@ import { BuyButton } from "@/app/components/BuyButton";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import { getNftDetailsQuery } from "@/lib/gql/queries/nft";
 import truncateEthAddress from "truncate-eth-address";
+import { chainList } from "@/lib/config/chain";
+import React from "react";
 
 const client = new Client({
   url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crosslink-subgraph",
@@ -33,12 +33,6 @@ type Params = {
 export default async function NftDetails({ params }: Params) {
   const tokenAddress = params.tokenId.split("-")[0];
   const tokenId = params.tokenId.split("-")[1];
-  //   const [showDetails, setShowDetails] = useState(false); // State to handle collapsible section
-
-  //   // Function to toggle collapsible section
-  //   const toggleDetails = () => {
-  //     setShowDetails(!showDetails);
-  //   };
 
   const nftDetailsRes = await client
     .query(getNftDetailsQuery, {
@@ -54,9 +48,13 @@ export default async function NftDetails({ params }: Params) {
   const data = await response.json();
   let imageUrl = data.image;
 
+  if (imageUrl && imageUrl.startsWith("ipfs://")) {
+    imageUrl = imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
+  }
+
   return (
     <div className="flex gap-x-8 h-full w-full">
-      <div className="flex flex-col">
+      <div className="flex flex-col w-1/2">
         <div className="w-full">
           <div className="flex h-full w-full items-center justify-center">
             <img src={imageUrl} className="w-full h-full" />
@@ -64,7 +62,7 @@ export default async function NftDetails({ params }: Params) {
         </div>
       </div>
 
-      <div className="flex flex-col py-5 w-full space-y-8">
+      <div className="flex flex-col py-5 space-y-8 w-1/2 justify-center">
         <div>
           <div className="text-2xl">
             {nftDetails.collectionName} #{params.tokenId.split("-")[1]}
@@ -82,10 +80,22 @@ export default async function NftDetails({ params }: Params) {
           </div>
 
           <div className="flex gap-x-2 justify-center items-center py-3">
-            <img
-              src="https://cryptologos.cc/logos/apecoin-ape-ape-logo.svg?v=026"
-              className="h-8"
-            />
+            {nftDetails.chainOrigin && (
+              <span className="text-lg">
+                {chainList.map((chain) => {
+                  if (chain.chainId === nftDetails.chainOrigin) {
+                    return (
+                      <img
+                        key={chain.chainId}
+                        src={chain.logo}
+                        className="h-5 items-center justify-center"
+                      />
+                    );
+                  }
+                  return null;
+                })}
+              </span>
+            )}
             <span className="text-lg">
               {nftDetails.price === "0" ? "0" : Number(nftDetails.price) / 1e18}
             </span>
@@ -131,43 +141,31 @@ export default async function NftDetails({ params }: Params) {
           </div>
         </div>
 
-        {/* <div className="flex flex-col w-full space-y-8">
-          <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
-            <div
-              className="flex items-center space-x-2 p-2 border-b cursor-pointer"
-              onClick={toggleDetails}
-            >
-              {showDetails ? (
-                <ChevronUpIcon className="h-4  top-2 right-2" />
-              ) : (
-                <ChevronDownIcon className="h-4  top-2 right-2" />
-              )}
+        <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
+          <div>
+            <div className="flex items-center space-x-2 p-2 border-b">
+              <InformationCircleIcon className="h-5" />
               <div className="text-lg">Details</div>
             </div>
-
-            {showDetails && (
-              <div className="p-4">
-                <table className="w-full">
-                  <tbody>
-                    <tr>
-                      <td className="py-2">Contract Address</td>
-                      <td className="py-2">0x......</td>
-                    </tr>
-                    <tr>
-                      <td className="py-2">Token ID</td>
-                      <td className="py-2">1</td>
-                    </tr>
-
-                    <tr>
-                      <td className="py-2">Chain</td>
-                      <td className="py-2">Arbitrum</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
           </div>
-        </div> */}
+          {chainList.map((chain) => {
+            if (chain.chainId === nftDetails.chainOrigin) {
+              return (
+                <div className="p-4" key={chain.chainId}>
+                  <ul className="list-none space-y-2 justify-between">
+                    <li>
+                      Contract address:{" "}
+                      {truncateEthAddress(nftDetails.id.split("-")[0])}
+                    </li>
+                    <li>Chain: {chain.name}</li>
+                    <li>Token ID: {nftDetails.id.split("-")[1]}</li>
+                  </ul>
+                </div>
+              );
+            }
+            return null;
+          })}
+        </div>
       </div>
     </div>
   );
