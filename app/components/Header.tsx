@@ -14,17 +14,24 @@ export function Header() {
   return (
     <div className="flex w-full items-center justify-between my-4">
       <div className="flex items-center">
-        <Link href="/" passHref>
-          <Image
-            src="/logo/Crosslink Horizontal.svg"
-            alt="Crosslink Logo"
-            width={200}
-            height={200}
-          />
-        </Link>
-        <Link href="/marketplace">
-          <span className="text-base ml-4">Marketplace</span>
-        </Link>
+        <div className="flex flex-col items-center">
+          <Link href="/" passHref>
+            <div className="flex items-center">
+              <Image
+                src="/logo/Crosslink_Logo_Mix.png"
+                alt="Crosslink Logo"
+                width={50}
+                height={50}
+              />
+              <span className="text-lg rainbow-text ml-2">OpenCCIP</span>
+            </div>
+          </Link>
+        </div>
+        <div className="flex items-center ml-9">
+          <Link href="/marketplace">
+            <span className="text-base">Marketplace</span>
+          </Link>
+        </div>
       </div>
       <ConnectButton />
     </div>
