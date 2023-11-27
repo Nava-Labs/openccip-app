@@ -12,12 +12,51 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/components/ui/table";
-import { BuyButton } from "@/app/components/BuyButton";
+
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import { getNftDetailsQuery } from "@/lib/gql/queries/nft";
 import truncateEthAddress from "truncate-eth-address";
 import { chainList } from "@/lib/config/chain";
 import React from "react";
+import Details from "@/app/components/Details";
+import BuyButton from "@/app/components/BuyButton";
+import openCCIPEth from "@/public/openccip-eth.png";
+import Image from "next/image";
+
+function generateContractAddressLink(
+  chainName: string,
+  contractAddress: string
+) {
+  let link = "";
+
+  switch (chainName) {
+    case "Ethereum Sepolia":
+      link = `https://sepolia.etherscan.io/address/${contractAddress}`;
+      break;
+    case "Optimism Goerli":
+      link = `https://goerli-optimism.etherscan.io/address/${contractAddress}`;
+      break;
+    case "Avalanche Fuji":
+      link = `https://testnet.snowtrace.io/address/${contractAddress}`;
+      break;
+    case "Arbitrum Testnet":
+      link = `https://testnet.arbiscan.io/address/${contractAddress}`;
+      break;
+    case "Polygon Mumbai":
+      link = `https://mumbai.polygonscan.com/address/${contractAddress}`;
+      break;
+    case "Base Goerli":
+      link = `https://goerli.basescan.org/address/${contractAddress}`;
+      break;
+    case "BSC Testnet":
+      link = `https://testnet.bscscan.com/address/${contractAddress}`;
+      break;
+    default:
+      link = "Invalid Chain";
+  }
+
+  return link;
+}
 
 const client = new Client({
   url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crosslink-subgraph",
@@ -80,22 +119,12 @@ export default async function NftDetails({ params }: Params) {
           </div>
 
           <div className="flex gap-x-2 justify-center items-center py-3">
-            {nftDetails.chainOrigin && (
-              <span className="text-lg">
-                {chainList.map((chain) => {
-                  if (chain.chainId === nftDetails.chainOrigin) {
-                    return (
-                      <img
-                        key={chain.chainId}
-                        src={chain.logo}
-                        className="h-5 items-center justify-center"
-                      />
-                    );
-                  }
-                  return null;
-                })}
-              </span>
-            )}
+            <Image
+              src={openCCIPEth}
+              alt="openCCIP ETH"
+              width={20}
+              height={20}
+            />
             <span className="text-lg">
               {nftDetails.price === "0" ? "0" : Number(nftDetails.price) / 1e18}
             </span>
@@ -149,13 +178,25 @@ export default async function NftDetails({ params }: Params) {
             </div>
           </div>
           {chainList.map((chain) => {
-            if (chain.chainId === nftDetails.chainOrigin) {
+            if (chain.chainSelector === nftDetails.chainOrigin) {
+              const contractLink = generateContractAddressLink(
+                chain.name,
+                nftDetails.id.split("-")[0]
+              );
+
               return (
-                <div className="p-4" key={chain.chainId}>
+                <div className="p-4" key={chain.chainSelector}>
                   <ul className="list-none space-y-2 justify-between">
                     <li>
                       Contract address:{" "}
-                      {truncateEthAddress(nftDetails.id.split("-")[0])}
+                      <a
+                        href={contractLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-200"
+                      >
+                        {truncateEthAddress(nftDetails.id.split("-")[0])}
+                      </a>
                     </li>
                     <li>Chain: {chain.name}</li>
                     <li>Token ID: {nftDetails.id.split("-")[1]}</li>
