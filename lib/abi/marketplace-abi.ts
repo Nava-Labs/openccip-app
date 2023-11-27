@@ -1,4 +1,4 @@
-export const NFT_ABI = <const>[
+export const Marketplace_ABI = <const>[
   {
     inputs: [
       { internalType: "uint64", name: "_chainIdThis", type: "uint64" },
