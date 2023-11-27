@@ -25,3 +25,17 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.rainbow-text {
+  background-image: linear-gradient(
+    to right,
+    #ffd700,
+    #ffa500,
+    #9370db,
+    #87ceeb
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  transition: text-shadow 0.3s ease-in-out;
+}
