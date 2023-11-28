@@ -18,7 +18,6 @@ import { getNftDetailsQuery } from "@/lib/gql/queries/nft";
 import truncateEthAddress from "truncate-eth-address";
 import { chainList } from "@/lib/config/chain";
 import React from "react";
-import Details from "@/app/components/Details";
 import BuyButton from "@/app/components/BuyButton";
 import openCCIPEth from "@/public/openccip-eth.png";
 import Image from "next/image";
@@ -131,9 +130,7 @@ export default async function NftDetails({ params }: Params) {
           </div>
 
           <div className="px-2 pb-3">
-            <div className="flex items-center rounded-xl bg-blue-500 py-2">
-              <BuyButton tokenAddress={tokenAddress} tokenId={tokenId} />
-            </div>
+            <BuyButton tokenAddress={tokenAddress} tokenId={tokenId} />
           </div>
         </div>
 
