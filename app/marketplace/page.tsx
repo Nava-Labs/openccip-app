@@ -9,7 +9,7 @@ import openCCIPEth from "@/public/openccip-eth.png";
 import Image from "next/image";
 
 const client = new Client({
-  url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crosslink-subgraph",
+  url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crc-nft-marketplace",
   exchanges: [cacheExchange, fetchExchange],
 });
 

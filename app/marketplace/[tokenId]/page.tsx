@@ -59,7 +59,7 @@ function generateContractAddressLink(
 }
 
 const client = new Client({
-  url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crosslink-subgraph",
+  url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crc-nft-marketplace",
   exchanges: [cacheExchange, fetchExchange],
 });
 
