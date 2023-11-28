@@ -1,4 +1,4 @@
-"use client"
+
 import { createWalletClient, custom, http } from "viem";
 const { OpenCCIP } = require("openccip-sdk");
 import { polygonMumbai } from "viem/chains";

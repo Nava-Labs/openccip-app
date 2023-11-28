@@ -49,11 +49,11 @@ export const chainList: Chain[] = [
     slug: "base-testnet",
     marketplaceAddr: "0x9aDa66369E1f548aB048C7FC708b6271994a16D4"
   },
-  {
-    chainSelector: "13264668187771770619",
-    name: "BSC Testnet",
-    logo: "https://cryptologos.cc/logos/binance-usd-busd-logo.svg?v=029",
-    slug: "bsc-testnet",
-    marketplaceAddr: "0xf3cef7fA414CB9a027f73a4d46f02092C5412862"
-  },
+  // {
+  //   chainSelector: "13264668187771770619",
+  //   name: "BSC Testnet",
+  //   logo: "https://cryptologos.cc/logos/binance-usd-busd-logo.svg?v=029",
+  //   slug: "bsc-testnet",
+  //   marketplaceAddr: "0xf3cef7fA414CB9a027f73a4d46f02092C5412862"
+  // },
 ];

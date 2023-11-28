@@ -1,5 +1,6 @@
 // export const dynamic = "force-dynamic";
-
+"use client"
+import { useState, useEffect } from 'react'
 import CustomImage from "./modules/Image";
 import { getNftsQuery } from "@/lib/gql/queries/nft";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
@@ -7,19 +8,43 @@ import Link from "next/link";
 import { chainList } from "@/lib/config/chain";
 import openCCIPEth from "@/public/openccip-eth.png";
 import Image from "next/image";
-import { SyncInfo } from "../components/SyncInfo";
+import { SyncInfo, formatTimestamp, FormattedTimestamp, TimestampData, SyncState } from "../components/SyncInfo";
+
+import { getTimestamps } from "@/lib/modules/hooks/handleSendTx";
+import { Marketplace_ABI } from "@/lib/abi/marketplace-abi";
 
 const client = new Client({
   url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crosslink-subgraph",
   exchanges: [cacheExchange, fetchExchange],
 });
 
-export default async function Marketplace() {
-  const nftsRes = await client.query(getNftsQuery, {}).toPromise();
-  // console.log("yooyoy ", timestampData)
-  if (!nftsRes) throw new Error("Failed to fetch NFTs");
+export default function Marketplace() {
 
-  let nfts = nftsRes.data?.listedNFTs.filter((item) => item.price !== "0");
+  const [formattedTimestamp, setFormatedTimestamp] = useState<Array<FormattedTimestamp>>()
+  const [nfts, setnfts] = useState([])
+  useEffect(() => {
+    const getTimestampData = async()=>{
+      let timestampData = await getTimestamps("base-testnet", chainList[4].marketplaceAddr, Marketplace_ABI );
+      let formattedTimestamp:Array<FormattedTimestamp> = [];
+      formattedTimestamp = formatTimestamp(timestampData);
+      setFormatedTimestamp(formattedTimestamp);
+    }
+
+    const getNFTs = async()=>{
+      const nftsRes = await client.query(getNftsQuery, {}).toPromise();
+
+      if (!nftsRes) throw new Error("Failed to fetch NFTs");
+
+      let nfts:any = nftsRes.data?.listedNFTs.filter((item) => item.price !== "0");
+      console.log("yoyoyo ", nfts)
+      setnfts(nfts);
+    }
+
+    getTimestampData()
+    getNFTs()
+  }, [])
+
+  // console.log("yooyoy ", timestampData)
 
   return (
     <>

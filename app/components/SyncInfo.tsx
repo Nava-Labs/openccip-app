@@ -1,5 +1,5 @@
-"use client"; 
 import React from "react";
+import { useState, useEffect } from 'react'
 import * as Popover from "@radix-ui/react-popover";
 import { cn } from "../lib/utils";
 
@@ -10,10 +10,10 @@ import { chainList } from "@/lib/config/chain";
 type Props={
 }
 
-type SyncState = "synced" | "syncing" | "fetching" | "error";
+export type SyncState = "synced" | "syncing" | "fetching" | "error";
 
 
-type TimestampData = {
+export type TimestampData = {
   chainSelector:string,
   contractAddr: string,
   name: string,
@@ -22,13 +22,13 @@ type TimestampData = {
   rpc: any
 }
 
-type FormattedTimestamp = {
+export type FormattedTimestamp = {
   name: string,
   latestSyncTimestamp: BigInt,
   syncing: SyncState
 }
 
-function formatTimestamp(timestampData: TimestampData[]): FormattedTimestamp[]{
+export function formatTimestamp(timestampData: TimestampData[]): FormattedTimestamp[]{
   let maxTimestamp:BigInt = BigInt(0);
   let formattedData:Array<FormattedTimestamp>=[];
   for(let i=0;i<timestampData.length;i++){
@@ -50,11 +50,7 @@ function formatTimestamp(timestampData: TimestampData[]): FormattedTimestamp[]{
   return formattedData
 }
 
-export const SyncInfo = async () => {
-  "use client"; 
-  const timestampData = await getTimestamps("base-testnet", chainList[5].marketplaceAddr, Marketplace_ABI );
-  let formattedTimestamp:Array<FormattedTimestamp> = [];
-  formattedTimestamp = formatTimestamp(timestampData);
+export const SyncInfo = () => {
 
   return (
     <div>
@@ -63,19 +59,19 @@ export const SyncInfo = async () => {
           <button className="border rounded-xl p-3">Info</button>
         </Popover.Trigger>
         <Popover.Portal>
-          <Popover.Content>
+          {/* <Popover.Content>
             <div className="border rounded-xl">
               <div className="p-3">
                 <p>Chains:</p>
                 {
-                  formattedTimestamp.map((key)=>{
+                  formattedTimestamp?.map((key)=>{
                     return <ChainStatus chainName={key.name} status={key.syncing} />
                   })
                 }
                 <ChainStatus chainName="Testt" status="syncing" />
               </div>
             </div>
-          </Popover.Content>
+          </Popover.Content> */}
         </Popover.Portal>
       </Popover.Root>
     </div>
