@@ -14,13 +14,13 @@ export const chainList: Chain[] = [
     slug: "sepolia-testnet",
     marketplaceAddr: "0x00D3eB554920E8069eAAD98E75D5B36173A8ee03"
   },
-  {
-    chainSelector: "2664363617261496610",
-    name: "Optimism Goerli",
-    logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.svg?v=029",
-    slug: "op-testnet",
-    marketplaceAddr: "0x68b9bDD80727CC031d5Be9918E071b8e615c3C31"
-  },
+  // {
+  //   chainSelector: "2664363617261496610",
+  //   name: "Optimism Goerli",
+  //   logo: "https://cryptologos.cc/logos/optimism-ethereum-op-logo.svg?v=029",
+  //   slug: "op-testnet",
+  //   marketplaceAddr: "0x68b9bDD80727CC031d5Be9918E071b8e615c3C31"
+  // },
   {
     chainSelector: "14767482510784806043",
     name: "Avalanche Fuji",
