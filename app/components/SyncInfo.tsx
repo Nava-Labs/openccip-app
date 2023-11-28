@@ -1,8 +1,61 @@
+"use client"; 
 import React from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { cn } from "../lib/utils";
 
-export const SyncInfo = () => {
+import { getTimestamps } from "@/lib/modules/hooks/handleSendTx";
+import { Marketplace_ABI } from "@/lib/abi/marketplace-abi";
+import { chainList } from "@/lib/config/chain";
+
+type Props={
+}
+
+type SyncState = "synced" | "syncing" | "fetching" | "error";
+
+
+type TimestampData = {
+  chainSelector:string,
+  contractAddr: string,
+  name: string,
+  latestSyncTimestamp: BigInt,
+  routerAddr: string,
+  rpc: any
+}
+
+type FormattedTimestamp = {
+  name: string,
+  latestSyncTimestamp: BigInt,
+  syncing: SyncState
+}
+
+function formatTimestamp(timestampData: TimestampData[]): FormattedTimestamp[]{
+  let maxTimestamp:BigInt = BigInt(0);
+  let formattedData:Array<FormattedTimestamp>=[];
+  for(let i=0;i<timestampData.length;i++){
+    if (maxTimestamp<timestampData[i].latestSyncTimestamp){
+      maxTimestamp = timestampData[i].latestSyncTimestamp;
+    }
+    formattedData.push({
+      name: timestampData[i].name,
+      latestSyncTimestamp: timestampData[i].latestSyncTimestamp,
+      syncing: "syncing"
+    })
+  }
+
+  for(let i=0;i<timestampData.length;i++){
+    if (maxTimestamp==formattedData[i].latestSyncTimestamp){
+      formattedData[i].syncing = "synced";
+    }
+  }
+  return formattedData
+}
+
+export const SyncInfo = async () => {
+  "use client"; 
+  const timestampData = await getTimestamps("base-testnet", chainList[5].marketplaceAddr, Marketplace_ABI );
+  let formattedTimestamp:Array<FormattedTimestamp> = [];
+  formattedTimestamp = formatTimestamp(timestampData);
+
   return (
     <div>
       <Popover.Root>
@@ -14,13 +67,12 @@ export const SyncInfo = () => {
             <div className="border rounded-xl">
               <div className="p-3">
                 <p>Chains:</p>
-                <ChainStatus chainName="Ethereum Sepolia" status="syncing" />
-                <ChainStatus chainName="Polygon Mumbai" status="syncing" />
-                <ChainStatus chainName="Avalanche Fuji" status="syncing" />
-                <ChainStatus chainName="Base Goerli" status="syncing" />
-                <ChainStatus chainName="Arbitrum Goerli" status="syncing" />
-                <ChainStatus chainName="BSC Testnet" status="syncing" />
-                <ChainStatus chainName="Optimism Goerli" status="syncing" />
+                {
+                  formattedTimestamp.map((key)=>{
+                    return <ChainStatus chainName={key.name} status={key.syncing} />
+                  })
+                }
+                <ChainStatus chainName="Testt" status="syncing" />
               </div>
             </div>
           </Popover.Content>
@@ -34,7 +86,7 @@ export const SyncInfo = () => {
     status,
   }: {
     chainName: string;
-    status: "idle" | "syncing" | "fetching" | "error";
+    status: SyncState;
   }) {
     return (
       <div className="flex items-center space-x-4">
@@ -47,7 +99,7 @@ export const SyncInfo = () => {
   function Status({
     state,
   }: {
-    state: "idle" | "syncing" | "fetching" | "error";
+    state: SyncState;
   }) {
     return (
       <div className="relative -mt-px">
@@ -55,7 +107,7 @@ export const SyncInfo = () => {
           className={cn(
             state === "error" && "bg-red-500",
             state === "syncing" && "bg-amber-500",
-            (state === "idle" || state === "fetching") && "bg-teal-300",
+            (state === "fetching") && "bg-teal-300",
             "w-2 h-2 rounded-full ring-2 ring-transparent"
           )}
         />

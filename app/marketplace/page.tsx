@@ -7,6 +7,7 @@ import Link from "next/link";
 import { chainList } from "@/lib/config/chain";
 import openCCIPEth from "@/public/openccip-eth.png";
 import Image from "next/image";
+import { SyncInfo } from "../components/SyncInfo";
 
 const client = new Client({
   url: "https://api.thegraph.com/subgraphs/name/erwinphanglius/crosslink-subgraph",
@@ -15,11 +16,13 @@ const client = new Client({
 
 export default async function Marketplace() {
   const nftsRes = await client.query(getNftsQuery, {}).toPromise();
+  // console.log("yooyoy ", timestampData)
   if (!nftsRes) throw new Error("Failed to fetch NFTs");
 
   let nfts = nftsRes.data?.listedNFTs.filter((item) => item.price !== "0");
 
   return (
+    <>
     <div className="grid grid-cols-4 gap-10">
       {nfts?.map((item: any) => {
         const chainInfo = chainList.find(
@@ -96,7 +99,10 @@ export default async function Marketplace() {
             </div>
           </Link>
         );
-      })}
+      })}      
     </div>
+
+    <SyncInfo/>
+    </>    
   );
 }
