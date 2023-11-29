@@ -1,4 +1,4 @@
-// export const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 import CustomImage from "./modules/Image";
 import { getNftsQuery } from "@/lib/gql/queries/nft";
