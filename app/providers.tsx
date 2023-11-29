@@ -31,7 +31,7 @@ const config = createConfig(
     walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID ?? "",
     // Required
     appName: "Crosslink",
-    chains: chains,
+    chains,
   })
 );
 
