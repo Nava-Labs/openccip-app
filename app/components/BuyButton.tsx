@@ -7,19 +7,21 @@ import { handleSendTx } from "@/lib/modules/hooks/handleSendTx";
 import { chainList } from "@/lib/config/chain";
 import { createWalletClient, custom } from "viem";
 import { polygonMumbai, sepolia } from "viem/chains";
-import { Client, cacheExchange, fetchExchange } from "@urql/core";
-import { getNftDetailsQuery } from "@/lib/gql/queries/nft";
+import { Marketplace_ABI } from "@/lib/abi/marketplace-abi";
 const { OpenCCIP } = require("openccip-sdk");
 
 type Props = {
-  tokenAddress: string;
+  nftAddress: string;
   tokenId: string;
+  chainOrigin: string;
 };
 
-export default function BuyButton({ tokenAddress, tokenId }: Props) {
+export default function BuyButton({ nftAddress, tokenId, chainOrigin }: Props) {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedChain, setSelectedChain] = useState("");
-  const [selectedChainId, setSelectedChainId] = useState("");
+  const [selectedChain, setSelectedChain] = useState("Ethereum Sepolia");
+  const [selectedChainId, setSelectedChainId] = useState(
+    "16015286601757825753"
+  );
   const [bestRoutes, setBestRoutes] = useState<any[]>([]);
   const [showRoutes, setShowRoutes] = useState(false);
 
@@ -41,9 +43,12 @@ export default function BuyButton({ tokenAddress, tokenId }: Props) {
   };
 
   const fetchData = async (FROM: string) => {
+    const nftDetails = chainList.find(
+      (item) => item.chainSelector === chainOrigin
+    );
     const selectedChainDetails = chainList.find((item) => item.slug === FROM);
 
-    const TO = "polygon-testnet";
+    const TO = nftDetails?.slug;
 
     const account = await window.ethereum.request({
       method: "eth_requestAccounts",
@@ -61,7 +66,7 @@ export default function BuyButton({ tokenAddress, tokenId }: Props) {
     setBestRoutes(bestRoutes.data);
   };
 
-  console.log("Best Route:", bestRoutes);
+  // console.log("Best Route:", bestRoutes);
 
   return (
     <>
@@ -71,8 +76,20 @@ export default function BuyButton({ tokenAddress, tokenId }: Props) {
             disabled={isLoading}
             onClick={async () => {
               setIsLoading(true);
-              const result = await handleSendTx(tokenAddress);
-              console.log(result);
+              try {
+                const result = await handleSendTx({
+                  nftAddress,
+                  tokenId,
+                  chainOrigin,
+                  payFrom: selectedChainId,
+                });
+                // const result = await handleSendTx();
+                console.log(result);
+              } catch (error) {
+                console.error(error);
+              } finally {
+                setIsLoading(false);
+              }
             }}
             className="text-center flex-1 w-full"
           >

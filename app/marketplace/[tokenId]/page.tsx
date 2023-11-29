@@ -130,7 +130,11 @@ export default async function NftDetails({ params }: Params) {
           </div>
 
           <div className="px-2 pb-3">
-            <BuyButton tokenAddress={tokenAddress} tokenId={tokenId} />
+            <BuyButton
+              nftAddress={tokenAddress}
+              tokenId={tokenId}
+              chainOrigin={nftDetails.chainOrigin}
+            />
           </div>
         </div>
 
