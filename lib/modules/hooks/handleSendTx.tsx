@@ -15,7 +15,7 @@ import { baseGoerli, polygon, polygonMumbai, sepolia } from "viem/chains";
 //   txMetadata: TxMetadata[];
 // };
 
-// const mockNftAddress = "0xf3cef7fA414CB9a027f73a4d46f02092C5412862";
+// const mockNftAddress = "0x9aDa66369E1f548aB048C7FC708b6271994a16D4";
 
 // export const handleSendTx = async () => {
 //   const [account] = await window.ethereum.request({
@@ -36,13 +36,13 @@ import { baseGoerli, polygon, polygonMumbai, sepolia } from "viem/chains";
 //     functionName: "buy",
 //     args: [
 //       1,
-//       "0xadb4517822664c767c2eb5f3a72fa2e7028c7905", //tokenAddr
-//       "2", //tokenId
+//       "0xfde68cbba7c34ac4e39d2a929c75dff916dc0220", //tokenAddr
+//       "1", //tokenId
 //     ],
 //   };
 
 //   const FROM = "base-testnet";
-//   const TO = "bsc-testnet";
+//   const TO = "polygon-testnet";
 
 //   // let route = await openccip.fetchBestRoutes(FROM, TO);
 //   // console.log("rute", route);
@@ -67,21 +67,22 @@ export const handleSendTx = async ({
   const nftDetails = chainList.find(
     (item) => item.chainSelector === chainOrigin
   );
-  console.log("nft", nftDetails);
+
   const selectedChainDetails = chainList.find(
     (item) => item.chainSelector === payFrom
   );
 
   const marketplaceAddr = selectedChainDetails?.marketplaceAddr;
 
+  const FROM = selectedChainDetails?.slug;
   const TO = nftDetails?.slug;
 
-  const account = await window.ethereum.request({
+  const [account] = await window.ethereum.request({
     method: "eth_requestAccounts",
   });
 
   const client = createWalletClient({
-    chain: polygonMumbai,
+    chain: baseGoerli,
     account,
     transport: custom(window.ethereum),
   });
@@ -98,22 +99,14 @@ export const handleSendTx = async ({
       tokenId, //tokenId
     ],
   };
-  // console.log("2", selectedChainDetails?.slug);
-  // console.log(selectedChainDetails?.marketplaceAddr);
-  // console.log("to", TO);
-  // console.log("3", contractDetails);
 
-  const sendTx = await openccip.hopThenExecute(payFrom, TO, contractDetails);
+  const sendTx = await openccip.hopThenExecute(FROM, TO, contractDetails);
   console.log(sendTx);
   // let route = await openccip.fetchBestRoutes(selectedChainDetails?.slug, TO);
   // console.log("rute", route);
 
   // try {
-  //   const sendTx = await openccip.hopThenExecute(
-  //     selectedChainDetails?.slug,
-  //     TO,
-  //     contractDetails
-  //   );
+  //   const sendTx = await openccip.hopThenExecute(FROM, TO, contractDetails);
   //   console.log(sendTx);
   // } catch (error) {
   //   console.error("Error in hopThenExecute:", error);
