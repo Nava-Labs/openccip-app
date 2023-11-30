@@ -9,6 +9,7 @@ import { createWalletClient, custom } from "viem";
 import { polygonMumbai, sepolia } from "viem/chains";
 import { Marketplace_ABI } from "@/lib/abi/marketplace-abi";
 const { OpenCCIP } = require("openccip-sdk");
+import { useNetwork, useSwitchNetwork } from "wagmi";
 
 type Props = {
   nftAddress: string;
@@ -17,6 +18,8 @@ type Props = {
 };
 
 export default function BuyButton({ nftAddress, tokenId, chainOrigin }: Props) {
+  const { chain } = useNetwork();
+  const { chains, error, pendingChainId, switchNetwork } = useSwitchNetwork();
   const [isLoading, setIsLoading] = useState(false);
   const [selectedChain, setSelectedChain] = useState("Ethereum Sepolia");
   const [selectedChainId, setSelectedChainId] = useState(
@@ -31,12 +34,17 @@ export default function BuyButton({ nftAddress, tokenId, chainOrigin }: Props) {
       ? selectedChainDetails.slug
       : "";
 
+    const selectedChainId = selectedChainDetails
+      ? selectedChainDetails.chainId
+      : 0;
+
     setSelectedChain(chain);
     setSelectedChainId(chainId);
 
     try {
       await fetchData(selectedChainSlug);
       setShowRoutes(true);
+      switchNetwork && switchNetwork(selectedChainId);
     } catch (error) {
       console.error("Error getting best route:", error);
     }
