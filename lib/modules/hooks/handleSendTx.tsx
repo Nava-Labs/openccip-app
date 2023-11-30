@@ -1,4 +1,3 @@
-
 import { createWalletClient, custom, http } from "viem";
 const { OpenCCIP } = require("openccip-sdk");
 import { polygonMumbai } from "viem/chains";
@@ -31,16 +30,4 @@ export const handleSendTx = async () => {
   const openccip = new OpenCCIP(client);
 
   console.log(await openccip.fetchBestRoutes(FROM, TO));
-};
-
-export const getTimestamps = async (chain: string, contractAddr: string, contractABI: any) => {
-  const client = createWalletClient({
-    chain: polygonMumbai,
-    transport: http(),
-  });
-  console.log("contract addr ", contractAddr)
-  console.log("ini client nya apa ", client)
-  const openccip = new OpenCCIP(client);
-  let timestampData = await openccip.getAllSyncTimestamps(chain, contractAddr, contractABI);
-  return timestampData;
 };
