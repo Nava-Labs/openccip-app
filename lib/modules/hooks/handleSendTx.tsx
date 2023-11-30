@@ -2,7 +2,16 @@ import { Marketplace_ABI } from "@/lib/abi/marketplace-abi";
 import { chainList } from "@/lib/config/chain";
 import { createWalletClient, custom } from "viem";
 const { OpenCCIP } = require("openccip-sdk");
-import { baseGoerli, polygon, polygonMumbai, sepolia } from "viem/chains";
+import {
+  arbitrumGoerli,
+  avalancheFuji,
+  baseGoerli,
+  bscTestnet,
+  optimismGoerli,
+  polygon,
+  polygonMumbai,
+  sepolia,
+} from "viem/chains";
 
 // export type TxMetadata = {
 //   to: string;
@@ -81,8 +90,25 @@ export const handleSendTx = async ({
     method: "eth_requestAccounts",
   });
 
+  let walletchain;
+  if (payFrom == "5790810961207155433") {
+    walletchain = baseGoerli;
+  } else if (payFrom == "12532609583862916517") {
+    walletchain = polygonMumbai;
+  } else if (payFrom == "14767482510784806043") {
+    walletchain = avalancheFuji;
+  } else if (payFrom == "16015286601757825753") {
+    walletchain = sepolia;
+  } else if (payFrom == "2664363617261496610") {
+    walletchain = optimismGoerli;
+  } else if (payFrom == "6101244977088475029") {
+    walletchain = arbitrumGoerli;
+  } else if (payFrom == "13264668187771770619") {
+    walletchain = bscTestnet;
+  }
+
   const client = createWalletClient({
-    chain: baseGoerli,
+    chain: walletchain,
     account,
     transport: custom(window.ethereum),
   });
