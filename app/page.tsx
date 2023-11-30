@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { SyncInfo } from "./components/SyncInfo";
 
@@ -56,7 +54,6 @@ export default function Home() {
           </p>
         </div>
       </div>
-
       <SyncInfo />
     </main>
   );

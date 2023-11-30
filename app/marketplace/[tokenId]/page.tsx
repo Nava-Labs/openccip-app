@@ -21,6 +21,7 @@ import React from "react";
 import BuyButton from "@/app/components/BuyButton";
 import openCCIPEth from "@/public/openccip-eth.png";
 import Image from "next/image";
+import { SyncInfo } from "@/app/components/SyncInfo";
 
 function generateContractAddressLink(
   chainName: string,
@@ -91,122 +92,131 @@ export default async function NftDetails({ params }: Params) {
   }
 
   return (
-    <div className="flex gap-x-8 h-full w-full">
-      <div className="flex flex-col w-1/2">
-        <div className="w-full">
-          <div className="flex h-full w-full items-center justify-center">
-            <img src={imageUrl} className="w-full h-full" />
+    <div className="relative">
+      <div className="flex gap-x-8 h-full w-full">
+        <div className="flex flex-col w-1/2">
+          <div className="w-full">
+            <div className="flex h-full w-full items-center justify-center">
+              <img src={imageUrl} className="w-full h-full" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col py-5 space-y-8 w-1/2 justify-center">
+          <div>
+            <div className="text-2xl">
+              {nftDetails.collectionName} #{params.tokenId.split("-")[1]}
+            </div>
+            <div className="flex flex-row space-x-3 ">
+              <UserIcon className="h-5 " />
+              <div>Owned by {truncateEthAddress(nftDetails.owner)}</div>
+            </div>
+          </div>
+
+          <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
+            <div className="flex items-center space-x-3 p-2 border-b">
+              <BanknotesIcon className="h-5" />
+              <div className="text-lg">Price</div>
+            </div>
+
+            <div className="flex gap-x-2 justify-center items-center py-3">
+              <Image
+                src={openCCIPEth}
+                alt="openCCIP ETH"
+                width={20}
+                height={20}
+              />
+              <span className="text-lg">
+                {nftDetails.price === "0"
+                  ? "0"
+                  : Number(nftDetails.price) / 1e18}
+              </span>
+            </div>
+
+            <div className="px-2 pb-3">
+              <BuyButton
+                nftAddress={tokenAddress}
+                tokenId={tokenId}
+                chainOrigin={nftDetails.chainOrigin}
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
+            <div>
+              <div className="flex items-center space-x-2 p-2 border-b">
+                <ArrowsUpDownIcon className="h-5" />
+                <div className="text-lg">Activity</div>
+              </div>
+              <Table>
+                <TableHeader className="">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>Event</TableHead>
+                    <TableHead>Price</TableHead>
+                    <TableHead>From</TableHead>
+                    <TableHead>To</TableHead>
+                    <TableHead>Date</TableHead>
+                  </TableRow>
+                </TableHeader>
+                {nftDetails.activity.map((item: any, index: number) => (
+                  <TableBody key={index}>
+                    <TableCell>{item.type}</TableCell>
+                    <TableCell>
+                      {Number(BigInt(item.price) / BigInt(1e18))}
+                    </TableCell>
+                    <TableCell>{truncateEthAddress(item.from)}</TableCell>
+                    <TableCell>{truncateEthAddress(item.to)}</TableCell>
+                    <TableCell>
+                      {new Date(item.timestamp * 1000).toLocaleDateString()}
+                    </TableCell>
+                  </TableBody>
+                ))}
+              </Table>
+            </div>
+          </div>
+
+          <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
+            <div>
+              <div className="flex items-center space-x-2 p-2 border-b">
+                <InformationCircleIcon className="h-5" />
+                <div className="text-lg">Details</div>
+              </div>
+            </div>
+            {chainList.map((chain) => {
+              if (chain.chainSelector === nftDetails.chainOrigin) {
+                const contractLink = generateContractAddressLink(
+                  chain.name,
+                  nftDetails.id.split("-")[0]
+                );
+
+                return (
+                  <div className="p-4" key={chain.chainSelector}>
+                    <ul className="list-none space-y-2 justify-between">
+                      <li>
+                        Contract address:{" "}
+                        <a
+                          href={contractLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-blue-200"
+                        >
+                          {truncateEthAddress(nftDetails.id.split("-")[0])}
+                        </a>
+                      </li>
+                      <li>Chain: {chain.name}</li>
+                      <li>Token ID: {nftDetails.id.split("-")[1]}</li>
+                    </ul>
+                  </div>
+                );
+              }
+              return null;
+            })}
           </div>
         </div>
       </div>
-
-      <div className="flex flex-col py-5 space-y-8 w-1/2 justify-center">
-        <div>
-          <div className="text-2xl">
-            {nftDetails.collectionName} #{params.tokenId.split("-")[1]}
-          </div>
-          <div className="flex flex-row space-x-3 ">
-            <UserIcon className="h-5 " />
-            <div>Owned by {truncateEthAddress(nftDetails.owner)}</div>
-          </div>
-        </div>
-
-        <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
-          <div className="flex items-center space-x-3 p-2 border-b">
-            <BanknotesIcon className="h-5" />
-            <div className="text-lg">Price</div>
-          </div>
-
-          <div className="flex gap-x-2 justify-center items-center py-3">
-            <Image
-              src={openCCIPEth}
-              alt="openCCIP ETH"
-              width={20}
-              height={20}
-            />
-            <span className="text-lg">
-              {nftDetails.price === "0" ? "0" : Number(nftDetails.price) / 1e18}
-            </span>
-          </div>
-
-          <div className="px-2 pb-3">
-            <BuyButton
-              nftAddress={tokenAddress}
-              tokenId={tokenId}
-              chainOrigin={nftDetails.chainOrigin}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
-          <div>
-            <div className="flex items-center space-x-2 p-2 border-b">
-              <ArrowsUpDownIcon className="h-5" />
-              <div className="text-lg">Activity</div>
-            </div>
-            <Table>
-              <TableHeader className="">
-                <TableRow className="hover:bg-transparent">
-                  <TableHead>Event</TableHead>
-                  <TableHead>Price</TableHead>
-                  <TableHead>From</TableHead>
-                  <TableHead>To</TableHead>
-                  <TableHead>Date</TableHead>
-                </TableRow>
-              </TableHeader>
-              {nftDetails.activity.map((item: any, index: number) => (
-                <TableBody key={index}>
-                  <TableCell>{item.type}</TableCell>
-                  <TableCell>
-                    {Number(BigInt(item.price) / BigInt(1e18))}
-                  </TableCell>
-                  <TableCell>{truncateEthAddress(item.from)}</TableCell>
-                  <TableCell>{truncateEthAddress(item.to)}</TableCell>
-                  <TableCell>
-                    {new Date(item.timestamp * 1000).toLocaleDateString()}
-                  </TableCell>
-                </TableBody>
-              ))}
-            </Table>
-          </div>
-        </div>
-
-        <div className="flex flex-col w-full border border-neutral-500 rounded-lg bg-neutral-900">
-          <div>
-            <div className="flex items-center space-x-2 p-2 border-b">
-              <InformationCircleIcon className="h-5" />
-              <div className="text-lg">Details</div>
-            </div>
-          </div>
-          {chainList.map((chain) => {
-            if (chain.chainSelector === nftDetails.chainOrigin) {
-              const contractLink = generateContractAddressLink(
-                chain.name,
-                nftDetails.id.split("-")[0]
-              );
-
-              return (
-                <div className="p-4" key={chain.chainSelector}>
-                  <ul className="list-none space-y-2 justify-between">
-                    <li>
-                      Contract address:{" "}
-                      <a
-                        href={contractLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-blue-200"
-                      >
-                        {truncateEthAddress(nftDetails.id.split("-")[0])}
-                      </a>
-                    </li>
-                    <li>Chain: {chain.name}</li>
-                    <li>Token ID: {nftDetails.id.split("-")[1]}</li>
-                  </ul>
-                </div>
-              );
-            }
-            return null;
-          })}
+      <div className="absolute mt-4">
+        <div className="">
+          <SyncInfo />
         </div>
       </div>
     </div>
