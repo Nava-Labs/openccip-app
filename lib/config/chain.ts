@@ -19,7 +19,7 @@ export const chainList: Chain[] = [
     rpc: "",
     routerAddr: "0xD0daae2231E9CB96b94C8512223533293C3693Bf",
     chainId: 11155111,
-    marketplaceAddr: "0x00D3eB554920E8069eAAD98E75D5B36173A8ee03",
+    marketplaceAddr: "0xd88b22CBB849232A93e5BC6c61D4195709C39dE4",
     ccipToken: "0x20AF34a33637C2c1671E071Dba89FB68f4403334",
   },
   // {
@@ -41,8 +41,8 @@ export const chainList: Chain[] = [
     rpc: "",
     routerAddr: "0x554472a2720E5E7D5D3C817529aBA05EEd5F82D8",
     chainId: 43113,
-    marketplaceAddr: "0xADc0aF0dd4eef8Ac9176ACF5F10Cd18830ae8342",
-    ccipToken: "0x12F58e46069a912cE8Eb1e6b5C71d2DDE9377590",
+    marketplaceAddr: "0x1dEACeF410005b6c670F35cBFf0Da98a6D606e4A",
+    ccipToken: "0xb165891E7b98De56E96662981a8966c357477d5c",
   },
   {
     chainSelector: "6101244977088475029",
@@ -63,8 +63,8 @@ export const chainList: Chain[] = [
     rpc: "",
     routerAddr: "0x70499c328e1E2a3c41108bd3730F6670a44595D1",
     chainId: 80001,
-    marketplaceAddr: "0x3b8a9c94c406f08Be7997136dF273FE652bc3612",
-    ccipToken: " 0x19De1E0755FF6fb6450dfF454B9817100160315E",
+    marketplaceAddr: "0xBEca54a2125EBf272D65ea4e03A2C9F030D2b619",
+    ccipToken: " 0xAB299f4012524cC191B17908E9161b05Bb1088DE",
   },
   {
     chainSelector: "5790810961207155433",
@@ -74,8 +74,8 @@ export const chainList: Chain[] = [
     rpc: "",
     routerAddr: "0xa8c0c11bf64af62cdca6f93d3769b88bdd7cb93d",
     chainId: 84531,
-    marketplaceAddr: "0x9aDa66369E1f548aB048C7FC708b6271994a16D4",
-    ccipToken: "0xC9cf7A0239041d5Ae08B335486A6ED14415876e2",
+    marketplaceAddr: "0x4A1e43392E68239A918F675D0826AB294923b5C3",
+    ccipToken: "0x162f2E18935394CA0A1643ae9371A351d6451d2f",
   },
   // {
   //   chainSelector: "13264668187771770619",
@@ -85,7 +85,7 @@ export const chainList: Chain[] = [
   //   rpc: "",
   //   routerAddr: "0x9527e2d01a3064ef6b50c1da1c0cc523803bcff2",
   //   chainId: 97,
-  //   marketplaceAddr: "0xf3cef7fA414CB9a027f73a4d46f02092C5412862",
+  //   marketplaceAddr: "0x40D969600d2B2a884AB80747C8448df57F412f47",
   //   ccipToken: "0x5feEAADDEc496dAf41D80c56C7f5840eBcBCf26d",
   // },
 ];
