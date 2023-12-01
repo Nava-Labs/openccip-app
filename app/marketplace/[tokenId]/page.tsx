@@ -91,6 +91,13 @@ export default async function NftDetails({ params }: Params) {
     imageUrl = imageUrl.replace("ipfs://", "https://ipfs.io/ipfs/");
   }
 
+  const getLogoURL = (activityOrigin: any) => {
+    const matchingChain = chainList.find(
+      (chain) => chain.chainSelector === activityOrigin
+    );
+    return matchingChain ? matchingChain.logo : "";
+  };
+
   return (
     <div className="relative">
       <div className="flex gap-x-8 h-full w-full">
@@ -150,7 +157,7 @@ export default async function NftDetails({ params }: Params) {
                 <div className="text-lg">Activity</div>
               </div>
               <Table>
-                <TableHeader className="">
+                <TableHeader>
                   <TableRow className="hover:bg-transparent">
                     <TableHead>Event</TableHead>
                     <TableHead>Price</TableHead>
@@ -171,7 +178,14 @@ export default async function NftDetails({ params }: Params) {
                     <TableCell>
                       {new Date(item.timestamp * 1000).toLocaleDateString()}
                     </TableCell>
-                    <TableCell>{item.chainOrigin}</TableCell>
+                    <TableCell>
+                      <img
+                        src={getLogoURL(item.activityOrigin)}
+                        alt={`Logo for ${item.activityOrigin}`}
+                        width="15px"
+                        height="15px"
+                      />
+                    </TableCell>
                   </TableBody>
                 ))}
               </Table>
