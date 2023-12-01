@@ -157,6 +157,7 @@ export default async function NftDetails({ params }: Params) {
                     <TableHead>From</TableHead>
                     <TableHead>To</TableHead>
                     <TableHead>Date</TableHead>
+                    <TableHead>Origin</TableHead>
                   </TableRow>
                 </TableHeader>
                 {nftDetails.activity.map((item: any, index: number) => (
@@ -170,6 +171,7 @@ export default async function NftDetails({ params }: Params) {
                     <TableCell>
                       {new Date(item.timestamp * 1000).toLocaleDateString()}
                     </TableCell>
+                    <TableCell>{item.chainOrigin}</TableCell>
                   </TableBody>
                 ))}
               </Table>
