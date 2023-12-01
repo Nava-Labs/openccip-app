@@ -28,30 +28,6 @@ export type FormattedTimestamp = {
   syncing: SyncState;
 };
 
-// export function formatTimestamp(
-//   timestampData: TimestampData[]
-// ): FormattedTimestamp[] {
-//   let maxTimestamp: BigInt = BigInt(0);
-//   let formattedData: Array<FormattedTimestamp> = [];
-//   for (let i = 0; i < timestampData.length; i++) {
-//     if (maxTimestamp < timestampData[i].latestSyncTimestamp) {
-//       maxTimestamp = timestampData[i].latestSyncTimestamp;
-//     }
-//     formattedData.push({
-//       name: timestampData[i].name,
-//       latestSyncTimestamp: timestampData[i].latestSyncTimestamp,
-//       syncing: "syncing",
-//     });
-//   }
-
-//   for (let i = 0; i < timestampData.length; i++) {
-//     if (maxTimestamp == formattedData[i].latestSyncTimestamp) {
-//       formattedData[i].syncing = "synced";
-//     }
-//   }
-//   return formattedData;
-// }
-
 export function formatTimestamp(
   timestampData: TimestampData[]
 ): FormattedTimestamp[] {
@@ -108,14 +84,17 @@ export const SyncInfo = () => {
   return (
     <div>
       <div className="border rounded-xl">
-        <div className="p-3">
-          {formattedTimestamps.map((chain, index) => (
-            <ChainStatus
-              key={index}
-              chainName={chain.name}
-              status={chain.syncing}
-            />
-          ))}
+        <div className="p-3 flex items-center">
+          <span className="mr-4">Syncing Info:</span>
+          <div className="flex gap-4">
+            {formattedTimestamps.map((chain, index) => (
+              <ChainStatus
+                key={index}
+                chainName={chain.name}
+                status={chain.syncing}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </div>
