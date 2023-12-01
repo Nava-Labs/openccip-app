@@ -138,6 +138,7 @@ export default async function NftDetails({ params }: Params) {
                 nftAddress={tokenAddress}
                 tokenId={tokenId}
                 chainOrigin={nftDetails.chainOrigin}
+                price={nftDetails.price}
               />
             </div>
           </div>
