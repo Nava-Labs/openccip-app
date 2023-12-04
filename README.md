@@ -21,6 +21,7 @@ This application leverages the powerful capabilities of Chainlink CCIP and utili
 ## Cross-Chain ERC20 Token Support
 
 - Leverage [CRC20](https://github.com/Nava-Labs/openccip-contracts/tree/dev#crc20-source-and-destination) contracts to enable ERC20 tokens' cross-chain functionality for payments within the NFT marketplace.
+- We are using ccipETH as our Cross-chain ERC20 token support.
 
 ## Fee Automation
 
